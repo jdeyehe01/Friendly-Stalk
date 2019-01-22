@@ -13,6 +13,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE = 1;
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
             Toast.makeText(this, "welcome " + account.getDisplayName(), Toast.LENGTH_SHORT).show();
-            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+            //findViewById(R.id.sign_in_button).setVisibility(View.GONE);
 
         }
     }
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             GoogleSignInAccount account = task.getResult();
             if (account != null) {
+
                 Toast.makeText(this, "Thanks " + account.getDisplayName(), Toast.LENGTH_SHORT).show();
             }
         }
