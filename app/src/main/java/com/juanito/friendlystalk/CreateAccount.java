@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -54,9 +55,6 @@ public class CreateAccount extends AppCompatActivity {
         String emailTxt = email.getText().toString();
         String pwTxt = pw.getText().toString();
 
-        Log.i("OPTION", emailTxt);
-        Log.i("OPTION", pwTxt);
-
 
 
         if(!emailTxt.isEmpty() && !pwTxt.isEmpty()){
@@ -68,15 +66,19 @@ public class CreateAccount extends AppCompatActivity {
                               /* FirebaseUser user = mAuth.getCurrentUser();
                                 Intent newUser = new Intent(CreateAccount.this,Home.class);
                                 newUser.putExtra("currentUser",user);*/
-                                FirebaseUser user = mAuth.getCurrentUser();
+
+
 
                                 startActivity(new Intent(CreateAccount.this,Home.class));
 
+
                             }else{
-                                Log.i("TAG","error");
+                                Toast.makeText(CreateAccount.this,"Error votre mot de passe doit contenir au moins 6 caractères ",Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
+
+
 
         }
     }

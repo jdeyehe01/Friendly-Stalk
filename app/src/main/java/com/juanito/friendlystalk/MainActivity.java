@@ -23,28 +23,36 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 
 public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE = 1;
     private Button btnCreateAccount;
     private Button btnSignInWithEmail;
+
     private FirebaseAuth mAuth;
+
+    //Connection with email/password
     private EditText emailET;
     private EditText pwET;
+
+    //Connection with google account
     private GoogleSignInClient mGoogleSignInClient;
+    private static final String TAG = "SignInActivity";
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth.getInstance().signOut();
 
+        mAuth = FirebaseAuth.getInstance();
 
         btnCreateAccount = (Button) findViewById(R.id.btnCreateAccount);
         btnSignInWithEmail = (Button) findViewById(R.id.btnLoginEmail);
+
         emailET = (EditText) findViewById(R.id.editTextMail) ;
         pwET = (EditText)findViewById(R.id.editTextPw);
 
@@ -56,12 +64,18 @@ public class MainActivity extends AppCompatActivity {
         btnSignInWithEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                emailET.setError("Mail obligatoire");
-                pwET.setError("Passeword obligatoire");
+
+                if(emailET.getText().toString().isEmpty()){
+                    emailET.setError("Mail obligatoire");
+                    return;
+                }
+                if(pwET.getText().toString().isEmpty()){
+                    pwET.setError("Passeword obligatoire");
+                    return;
+                }
                 signIn();
             }
         });
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,11 +84,44 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+
+        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, REQUEST_CODE);            }
+        });
 
     }
+/*
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if(currentUser != null){
+            startActivity(new Intent(MainActivity.this,Home.class));
+        }else{
+            Toast.makeText(MainActivity.this,"Veuillez vous connecter svp ",Toast.LENGTH_SHORT).show();
+
+        }
+    }*/
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == REQUEST_CODE) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            GoogleSignInAccount account = task.getResult();
+            if (account != null) {
+                signInWithGoogleAcccount(account);
+            }
+        }
 
+    }
 
     private void signIn(){
         String email = emailET.getText().toString();
@@ -98,6 +145,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    private void signInWithGoogleAcccount(GoogleSignInAccount acct ){
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.i(TAG, "signInWithCredential:success");
+                            startActivity(new Intent(MainActivity.this,Home.class));
+                        } else {
+                            Log.i(TAG, "signInWithCredential:failure", task.getException());
+                        }
+
+                    }
+                });
+
+    }
 
 
 
