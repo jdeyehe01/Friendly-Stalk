@@ -1,20 +1,26 @@
 package com.juanito.friendlystalk;
 
+import java.util.ArrayList;
+
 public class User {
     private String lastName;
     private String firstName;
     private String email;
     private String id;
     private String pseudo;
+    private ArrayList<User> friends;
 
-    public User(String lastName, String firstName, String email, String pseudo) {
+
+    public User(){
+    }
+
+    public User(String lastName, String firstName, String email, String id, String pseudo) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.email = email;
+        this.id = id;
         this.pseudo = pseudo;
-    }
-
-    public User(){
+        this.friends = new ArrayList<>();
     }
 
     public String getLastName() {
@@ -57,5 +63,23 @@ public class User {
         this.pseudo = pseudo;
     }
 
+    public ArrayList<User> getFriends() {
+        return friends;
+    }
 
+    public void setFriends(ArrayList<User> friends) {
+        this.friends = friends;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "lastName='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", email='" + email + '\'' +
+                ", id='" + id + '\'' +
+                ", pseudo='" + pseudo + '\'' +
+                ", friends=" + friends +
+                '}';
+    }
 }

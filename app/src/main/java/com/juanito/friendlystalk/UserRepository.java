@@ -1,23 +1,31 @@
 package com.juanito.friendlystalk;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository implements IUserDao {
     private DatabaseReference myDatabaseReference;
 
     DatabaseReference database = FirebaseDatabase.getInstance().getReference("User");
-    String id = database.getKey();
+    String id = database.push().getKey();
+    List<User> res = new ArrayList<User>();
+
 
 
 
     @Override
     public void insert(User user) {
         database.child(id).setValue(user);
-
-
     }
 
     @Override
@@ -26,13 +34,40 @@ public class UserRepository implements IUserDao {
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        return null;
-    }
-
-    @Override
     public User getUserByPseudo(String pseudo) {
-        return null;
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User");
+
+        Query query = ref.orderByChild("pseudo").equalTo(pseudo);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        User u = snapshot.getValue(User.class);
+                        if(u != null){
+                            res.add(u);
+
+                            break;
+
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+        if(res.isEmpty()){
+            return null;
+        }
+        return res.get(0);
     }
 
     @Override

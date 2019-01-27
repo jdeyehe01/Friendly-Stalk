@@ -15,6 +15,7 @@ public class Home extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private Button btnLogout;
+    private UserRepository repo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +24,12 @@ public class Home extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         currentUser = mAuth.getCurrentUser();
+
+        repo = new UserRepository();
+
+        User currentSignIn = new User("Toto","Titi",currentUser.getEmail(),currentUser.getUid(),"");
+
+        //repo.insert(currentSignIn);
 
 
        // btnLogout = findViewById(R.id.btnLogout);
@@ -45,6 +52,17 @@ public class Home extends AppCompatActivity {
         super.onResume();
 
         Toast.makeText(Home.this,"Bienvenue "+ currentUser.getEmail(),Toast.LENGTH_SHORT).show();
+
+        User u = repo.getUserByPseudo("Tonetti");
+        if(u != null ){
+            Toast.makeText(Home.this,"Voici " + u.getEmail(),Toast.LENGTH_SHORT).show();
+
+        }else{
+            Toast.makeText(Home.this,"Aucun résultat " ,Toast.LENGTH_SHORT).show();
+
+        }
+
+
 
     }
 }
