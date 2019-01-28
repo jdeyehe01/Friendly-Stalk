@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class CreateAccount extends AppCompatActivity {
     private EditText fName;
@@ -23,6 +24,8 @@ public class CreateAccount extends AppCompatActivity {
     private EditText pw;
     private Button btnCreateUser;
     private FirebaseAuth mAuth;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +53,16 @@ public class CreateAccount extends AppCompatActivity {
     }
 
     private void signUp(){
-        //String firstName = fName.getText().toString();
-        //String lastName = lName.getText().toString();
+        String firstName = fName.getText().toString();
+        String lastName = lName.getText().toString();
         String emailTxt = email.getText().toString();
         String pwTxt = pw.getText().toString();
 
 
 
+
         if(!emailTxt.isEmpty() && !pwTxt.isEmpty()){
+
             mAuth.createUserWithEmailAndPassword(emailTxt,pwTxt)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -66,10 +71,15 @@ public class CreateAccount extends AppCompatActivity {
                               /* FirebaseUser user = mAuth.getCurrentUser();
                                 Intent newUser = new Intent(CreateAccount.this,Home.class);
                                 newUser.putExtra("currentUser",user);*/
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName("DEYEHE" + " " + "Jean")
+                                        .build();
+                                mAuth.getCurrentUser().updateProfile(profileUpdates);
+
+                                sendEmail(mAuth);
 
 
-
-                                startActivity(new Intent(CreateAccount.this,Home.class));
+                                startActivity(new Intent(CreateAccount.this,MainActivity.class));
 
 
                             }else{
@@ -78,5 +88,20 @@ public class CreateAccount extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    public void sendEmail(final FirebaseAuth auth){
+        auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(CreateAccount.this, "Veuiller confirmer votre adresse mail en cliquant sur le lien qui a été envoyé à l'adresse suivante : " + auth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(CreateAccount.this,
+                            "Erreur dans l'envoie du mail pour effectuer une vérification",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

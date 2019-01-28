@@ -3,6 +3,8 @@ package com.juanito.friendlystalk;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -14,11 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository implements IUserDao {
-    private DatabaseReference myDatabaseReference;
 
-    DatabaseReference database = FirebaseDatabase.getInstance().getReference("User");
-    String id = database.push().getKey();
-    List<User> res = new ArrayList<User>();
+    private DatabaseReference database ;
+    private String id;
+    private List<User> res ;
+
+    public UserRepository(){
+       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        database = FirebaseDatabase.getInstance().getReference("User");
+        id = database.push().getKey();
+        res = new ArrayList<User>();
+    }
 
 
 
@@ -51,11 +59,8 @@ public class UserRepository implements IUserDao {
                         User u = snapshot.getValue(User.class);
                         if(u != null){
                             res.add(u);
-
                             break;
-
                         }
-
                     }
                 }
             }
@@ -72,6 +77,15 @@ public class UserRepository implements IUserDao {
 
     @Override
     public List<User> getListFriendOneUser(String pseudoUser) {
+
+        res.clear();
+
+
+        List<String> pseudos = new ArrayList<String>();
+
+        FirebaseUser u;
+       // u.updateProfile(new UserProfileChangeRequest(pseudoUser));
+
         return null;
     }
 }

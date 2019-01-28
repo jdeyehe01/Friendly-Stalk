@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "SignInActivity";
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         btnCreateAccount = (Button) findViewById(R.id.btnCreateAccount);
         btnSignInWithEmail = (Button) findViewById(R.id.btnLoginEmail);
 
-        emailET = (EditText) findViewById(R.id.editTextMail) ;
-        pwET = (EditText)findViewById(R.id.editTextPw);
+        emailET = (EditText) findViewById(R.id.editTextMail);
+        pwET = (EditText) findViewById(R.id.editTextPw);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -65,11 +65,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(emailET.getText().toString().isEmpty()){
+                if (emailET.getText().toString().isEmpty()) {
                     emailET.setError("Mail obligatoire");
                     return;
                 }
-                if(pwET.getText().toString().isEmpty()){
+                if (pwET.getText().toString().isEmpty()) {
                     pwET.setError("Passeword obligatoire");
                     return;
                 }
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this,CreateAccount.class));
+                startActivity(new Intent(MainActivity.this, CreateAccount.class));
             }
         });
 
@@ -91,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent, REQUEST_CODE);            }
+                startActivityForResult(signInIntent, REQUEST_CODE);
+            }
         });
 
     }
@@ -123,22 +124,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void signIn(){
+    private void signIn() {
         String email = emailET.getText().toString();
         String pw = pwET.getText().toString();
         final Intent intent = new Intent(this, Home.class);
 
 
-        mAuth.signInWithEmailAndPassword(email,pw).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        mAuth.signInWithEmailAndPassword(email, pw).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     FirebaseUser currentUser = mAuth.getCurrentUser();
                     intent.putExtra("userCurrent", currentUser);
-                    startActivity(intent);
-                }
-                else{
-                    Toast.makeText(MainActivity.this,"L'authentification a échoué ! ",Toast.LENGTH_SHORT).show();
+
+                    if(mAuth.getCurrentUser().isEmailVerified()){
+                        startActivity(intent);
+
+                    }else{
+                        Toast.makeText(MainActivity.this, "Veuiller confirmer votre adresse mail  svp \n Un mail à l'adresse " + mAuth.getCurrentUser().getEmail() + " vous a été envoyé ", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "L'authentification a échoué ! ", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -146,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void signInWithGoogleAcccount(GoogleSignInAccount acct ){
+    private void signInWithGoogleAcccount(GoogleSignInAccount acct) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -154,19 +160,14 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.i(TAG, "signInWithCredential:success");
-                            startActivity(new Intent(MainActivity.this,Home.class));
+                            startActivity(new Intent(MainActivity.this, Home.class));
                         } else {
                             Log.i(TAG, "signInWithCredential:failure", task.getException());
                         }
-
                     }
                 });
 
     }
-
-
-
-
 }
 
 

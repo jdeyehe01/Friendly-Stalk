@@ -8,7 +8,7 @@ public class User {
     private String email;
     private String id;
     private String pseudo;
-    private ArrayList<User> friends;
+    private ArrayList<String> friendsPseudo;
 
 
     public User(){
@@ -20,7 +20,7 @@ public class User {
         this.email = email;
         this.id = id;
         this.pseudo = pseudo;
-        this.friends = new ArrayList<>();
+        this.friendsPseudo = new ArrayList<>();
     }
 
     public String getLastName() {
@@ -63,12 +63,16 @@ public class User {
         this.pseudo = pseudo;
     }
 
-    public ArrayList<User> getFriends() {
-        return friends;
+    public ArrayList<String> getFriends() {
+        return friendsPseudo;
     }
 
-    public void setFriends(ArrayList<User> friends) {
-        this.friends = friends;
+    public void setFriends(ArrayList<String> friends) {
+        this.friendsPseudo = friends;
+    }
+
+    public void addFriend(String pseudo){
+        friendsPseudo.add(pseudo);
     }
 
     @Override
@@ -79,7 +83,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", id='" + id + '\'' +
                 ", pseudo='" + pseudo + '\'' +
-                ", friends=" + friends +
+                ", friends=" + friendsPseudo +
                 '}';
     }
 }
