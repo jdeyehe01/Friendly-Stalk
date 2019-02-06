@@ -35,6 +35,7 @@
         </service>
 
         <activity android:name=".ListFriendsActivity"></activity>
+
     </application>
 
 </manifest>
