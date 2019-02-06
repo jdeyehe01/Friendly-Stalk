@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,10 +13,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
-public class CreateAccount extends AppCompatActivity {
+public class CreateAccountActivity extends AppCompatActivity {
     private EditText fName;
     private EditText lName;
     private EditText email;
@@ -30,7 +28,7 @@ public class CreateAccount extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_account);
+        setContentView(R.layout.Create_account_layout);
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -68,9 +66,7 @@ public class CreateAccount extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
-                              /* FirebaseUser user = mAuth.getCurrentUser();
-                                Intent newUser = new Intent(CreateAccount.this,Home.class);
-                                newUser.putExtra("currentUser",user);*/
+
                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                         .setDisplayName("DEYEHE" + " " + "Jean")
                                         .build();
@@ -79,11 +75,11 @@ public class CreateAccount extends AppCompatActivity {
                                 sendEmail(mAuth);
 
 
-                                startActivity(new Intent(CreateAccount.this,MainActivity.class));
+                                startActivity(new Intent(CreateAccountActivity.this,MainActivity.class));
 
 
                             }else{
-                                Toast.makeText(CreateAccount.this,"Error votre mot de passe doit contenir au moins 6 caractères ",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CreateAccountActivity.this,"Error votre mot de passe doit contenir au moins 6 caractères ",Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -95,9 +91,9 @@ public class CreateAccount extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(CreateAccount.this, "Veuiller confirmer votre adresse mail en cliquant sur le lien qui a été envoyé à l'adresse suivante : " + auth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateAccountActivity.this, "Veuiller confirmer votre adresse mail en cliquant sur le lien qui a été envoyé à l'adresse suivante : " + auth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(CreateAccount.this,
+                    Toast.makeText(CreateAccountActivity.this,
                             "Erreur dans l'envoie du mail pour effectuer une vérification",
                             Toast.LENGTH_SHORT).show();
                 }

@@ -1,16 +1,14 @@
 package com.juanito.friendlystalk;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class Home extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -20,7 +18,7 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.Home_layout);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -59,14 +57,14 @@ public class Home extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        Toast.makeText(Home.this,"Bienvenue "+ currentUser.getEmail(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(HomeActivity.this,"Bienvenue "+ currentUser.getEmail(),Toast.LENGTH_SHORT).show();
 
 
         if(u != null ){
-            Toast.makeText(Home.this,"Voici " + u.getEmail(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(HomeActivity.this,"Voici " + u.getEmail(),Toast.LENGTH_SHORT).show();
 
         }else{
-            Toast.makeText(Home.this,"Aucun résultat " ,Toast.LENGTH_SHORT).show();
+            Toast.makeText(HomeActivity.this,"Aucun résultat " ,Toast.LENGTH_SHORT).show();
 
         }
 

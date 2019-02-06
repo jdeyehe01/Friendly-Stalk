@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -18,7 +16,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     public static final int REQUEST_CODE = 1;
     private Button btnCreateAccount;
     private Button btnSignInWithEmail;
@@ -45,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.Login_layout);
         FirebaseAuth.getInstance().signOut();
 
         mAuth = FirebaseAuth.getInstance();
@@ -80,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, CreateAccount.class));
+                startActivity(new Intent(LoginActivity.this, CreateAccountActivity.class));
             }
         });
 
@@ -127,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
     private void signIn() {
         String email = emailET.getText().toString();
         String pw = pwET.getText().toString();
-        final Intent intent = new Intent(this, Home.class);
+        final Intent intent = new Intent(this, HomeActivity.class);
 
 
         mAuth.signInWithEmailAndPassword(email, pw).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -141,10 +138,10 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
 
                     }else{
-                        Toast.makeText(MainActivity.this, "Veuiller confirmer votre adresse mail  svp \n Un mail à l'adresse " + mAuth.getCurrentUser().getEmail() + " vous a été envoyé ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Veuiller confirmer votre adresse mail  svp \n Un mail à l'adresse " + mAuth.getCurrentUser().getEmail() + " vous a été envoyé ", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "L'authentification a échoué ! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "L'authentification a échoué ! ", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -160,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.i(TAG, "signInWithCredential:success");
-                            startActivity(new Intent(MainActivity.this, Home.class));
+                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         } else {
                             Log.i(TAG, "signInWithCredential:failure", task.getException());
                         }
