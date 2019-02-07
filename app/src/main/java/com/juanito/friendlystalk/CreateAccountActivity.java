@@ -75,7 +75,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                                 sendEmail(mAuth);
 
 
-                                startActivity(new Intent(CreateAccountActivity.this,MainActivity.class));
+                                startActivity(new Intent(CreateAccountActivity.this,CreateAccountActivity.class));
 
 
                             }else{
