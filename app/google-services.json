@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "849989921588",
+    "firebase_url": "https://friendlystalkdatabase.firebaseio.com",
+    "project_id": "friendlystalkdatabase",
+    "storage_bucket": "friendlystalkdatabase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849989921588:android:13cbd800a9411807",
+        "android_client_info": {
+          "package_name": "com.juanito.friendlystalk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849989921588-n0hj7qee1ruq62tc8bjee754vkgj1e2t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.juanito.friendlystalk",
+            "certificate_hash": "74b9127393ae963c27febed93c6c801049901322"
+          }
+        },
+        {
+          "client_id": "849989921588-ls0qlaqttcu477s9kck3cb4k17m5ijrf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcm9SYIqup67RJAewprE-C2vJWsO1WT68"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849989921588-ls0qlaqttcu477s9kck3cb4k17m5ijrf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
