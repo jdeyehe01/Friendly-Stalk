@@ -7,5 +7,6 @@ interface IUserDao {
     public List<User> getAll();
     User getUserByPseudo(String pseudo);
     public List<User> getListFriendOneUser(String pseudoUser);
+    public User findByEmail(String email);
 
 }
