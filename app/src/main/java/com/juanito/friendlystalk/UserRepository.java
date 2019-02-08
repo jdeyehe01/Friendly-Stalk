@@ -22,10 +22,10 @@ public class UserRepository implements IUserDao {
     private List<User> res ;
 
     public UserRepository(){
-       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        database = FirebaseDatabase.getInstance().getReference("User");
-        id = database.push().getKey();
-        res = new ArrayList<User>();
+       //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+       database = FirebaseDatabase.getInstance().getReference("User");
+       id = database.push().getKey();
+       res = new ArrayList<User>();
     }
 
 
@@ -43,6 +43,8 @@ public class UserRepository implements IUserDao {
 
     @Override
     public User getUserByPseudo(String pseudo) {
+
+        res.clear();
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User");
 
@@ -83,9 +85,43 @@ public class UserRepository implements IUserDao {
 
         List<String> pseudos = new ArrayList<String>();
 
-        FirebaseUser u;
-       // u.updateProfile(new UserProfileChangeRequest(pseudoUser));
+
 
         return null;
     }
+
+    @Override
+    public User findByEmail(String email) {
+
+        res.clear();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User");
+
+        Query query = ref.orderByChild("email").equalTo(email);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()){
+
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        User u = snapshot.getValue(User.class);
+                        if(u != null){
+                            res.add(u);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+        if(res.isEmpty()){
+            return null;
+        }
+        return res.get(0);    }
 }
