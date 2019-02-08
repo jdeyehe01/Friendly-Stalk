@@ -1,5 +1,7 @@
 package com.juanito.friendlystalk;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +39,8 @@ public class LoginActivity extends AppCompatActivity {
     //Connection with google account
     private GoogleSignInClient mGoogleSignInClient;
     private static final String TAG = "SignInActivity";
+
+    private UserRepository repository = new UserRepository();
 
 
     @Override
@@ -131,12 +135,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    FirebaseUser currentUser = mAuth.getCurrentUser();
-                    intent.putExtra("userCurrent", currentUser);
-
-                    if(mAuth.getCurrentUser().isEmailVerified()){
+                   if(mAuth.getCurrentUser().isEmailVerified()){
                         startActivity(intent);
-
                     }else{
                         Toast.makeText(LoginActivity.this, "Veuiller confirmer votre adresse mail  svp \n Un mail à l'adresse " + mAuth.getCurrentUser().getEmail() + " vous a été envoyé ", Toast.LENGTH_SHORT).show();
                     }
@@ -149,14 +149,22 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void signInWithGoogleAcccount(GoogleSignInAccount acct) {
+    private void signInWithGoogleAcccount(final GoogleSignInAccount acct) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.i(TAG, "signInWithCredential:success");
+                            User userInBdd = repository.findByEmail(acct.getEmail());
+
+                            if(userInBdd == null ){
+                               /* Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
+                                intent.putExtra("USER_GOOGLE" , acct );
+                                startActivity(new Intent(LoginActivity.this, CreateAccountActivity.class));*/
+                                beginFrangment();
+                                return;
+                            }
                             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         } else {
                             Log.i(TAG, "signInWithCredential:failure", task.getException());
@@ -164,6 +172,14 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    private void beginFrangment(){
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, new FragmentCreateAccountWithGoogle());
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }
 
