@@ -156,7 +156,9 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            User userInBdd = repository.findByEmail(acct.getEmail());
+                            //User userInBdd = repository.findByEmail(acct.getEmail());
+
+                            User userInBdd = repository.getTest(acct.getEmail());
 
                             if(userInBdd == null ){
                                /* Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
