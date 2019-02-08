@@ -33,12 +33,24 @@ public class UserRepository implements IUserDao {
 
     @Override
     public void insert(User user) {
+        user.setId(id);
         database.child(id).setValue(user);
     }
 
     @Override
     public List<User> getAll() {
-        return null;
+        database.addListenerForSingleValueEvent(valueEventListener);
+
+        return res;
+    }
+
+    public User getTest(String t){
+        Query query = FirebaseDatabase.getInstance().getReference("User").orderByChild("email").equalTo(t);
+        query.addListenerForSingleValueEvent(valueEventListener);
+        if(res.isEmpty()){
+            return null;
+        }
+        return res.get(0);
     }
 
     @Override
@@ -124,4 +136,24 @@ public class UserRepository implements IUserDao {
             return null;
         }
         return res.get(0);    }
+
+
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                res.clear();
+
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                       User user = snapshot.getValue(User.class);
+                       res.add(user);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
 }
