@@ -18,7 +18,7 @@ public class User {
         this.lastName = lastName;
         this.firstName = firstName;
         this.email = email;
-        this.id = id;
+        this.id ="0" ;
         this.pseudo = pseudo;
         this.friendsPseudo = new ArrayList<>();
     }
