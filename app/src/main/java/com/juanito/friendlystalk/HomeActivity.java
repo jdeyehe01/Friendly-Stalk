@@ -16,34 +16,25 @@ public class HomeActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private Button btnLogout;
+    private Button btnListFriends;
+    private Button btnInvitations;
+    private Button btnUpdateInformation;
     private UserRepository repo = new UserRepository();
+
     //private User u;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_layout);
-
         mAuth = FirebaseAuth.getInstance();
-
         currentUser = mAuth.getCurrentUser();
+        btnLogout = findViewById(R.id.btnLogout);
+        btnInvitations = findViewById(R.id.btnMyInvitations);
+        btnListFriends = findViewById(R.id.btnMyFriends);
+        btnUpdateInformation = findViewById(R.id.btnUpdateInformation);
 
-        //User currentSignIn = new User("Toto","Titi",currentUser.getEmail(),currentUser.getUid(),"");
-
-        //repo.insert(currentSignIn);
-
-       btnLogout = findViewById(R.id.btnLogout);
-
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(HomeActivity.this,LoginActivity.class));
-                Toast.makeText(HomeActivity.this,"Vous êtes dectonnectés",Toast.LENGTH_SHORT).show();
-            }
-        });
+        btnLogout.setOnClickListener(logoutListener);
+        btnListFriends.setOnClickListener(listFriends);
 
     }
 
@@ -55,8 +46,26 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(HomeActivity.this,"Bienvenue "+ currentUser.getDisplayName(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(HomeActivity.this, "Bienvenue " + currentUser.getDisplayName(), Toast.LENGTH_SHORT).show();
     }
+
+
+    View.OnClickListener logoutListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+            Toast.makeText(HomeActivity.this, "Vous êtes dectonnectés", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    View.OnClickListener listFriends = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            startActivity(new Intent(HomeActivity.this,ListFriendsActivity.class));
+        }
+    };
+
 }
 
 
