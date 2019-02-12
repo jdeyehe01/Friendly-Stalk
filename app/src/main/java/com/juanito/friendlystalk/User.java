@@ -8,7 +8,7 @@ public class User{
     private String email;
     private String id;
     private String pseudo;
-    private ArrayList<User> friendsPseudo;
+    private ArrayList<String> friendsPseudo;
     private String token;
 
 
@@ -23,7 +23,8 @@ public class User{
         this.pseudo = pseudo;
         this.token = "";
         this.friendsPseudo = new ArrayList<>();
-        friendsPseudo.add(new User("DEYEHE","Jean","j@h.com","Test"));
+        this.friendsPseudo.add("");
+       // friendsPseudo.add(new User());
     }
 
     public String getLastName() {
@@ -66,16 +67,16 @@ public class User{
         this.pseudo = pseudo;
     }
 
-    public ArrayList<User> getFriends() {
+    public ArrayList<String> getFriends() {
         return friendsPseudo;
     }
 
-    public void setFriends(ArrayList<User> friends) {
+    public void setFriends(ArrayList<String> friends) {
         this.friendsPseudo = friends;
     }
 
-    public void addFriend(User user){
-        friendsPseudo.add(user);
+    public void addFriend(String userPseudo){
+        friendsPseudo.add(userPseudo);
     }
 
     @Override
