@@ -23,6 +23,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -40,14 +42,16 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private static final String TAG = "SignInActivity";
 
-    private UserRepository repository = new UserRepository();
+    private UserRepository repository ;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        repository = new UserRepository();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
-        FirebaseAuth.getInstance().signOut();
+       // FirebaseAuth.getInstance().signOut();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -86,8 +90,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,19 +99,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
-/*
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if(currentUser != null){
-            startActivity(new Intent(MainActivity.this,Home.class));
-        }else{
-            Toast.makeText(MainActivity.this,"Veuillez vous connecter svp ",Toast.LENGTH_SHORT).show();
-
-        }
-    }*/
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -156,16 +145,10 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            //User userInBdd = repository.findByEmail(acct.getEmail());
-
-                            User userInBdd = repository.getTest(acct.getEmail());
-
-                            if(userInBdd == null ){
-                               /* Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
-                                intent.putExtra("USER_GOOGLE" , acct );
-                                startActivity(new Intent(LoginActivity.this, CreateAccountActivity.class));*/
-                                beginFrangment();
-                                return;
+                            User user = repository.findByEmail(acct.getEmail());
+                            if(user == null ){
+                               user = new User(acct.getFamilyName(),acct.getGivenName(),acct.getEmail(),acct.getDisplayName());
+                               repository.insert(user);
                             }
                             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         } else {
@@ -176,13 +159,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void beginFrangment(){
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container, new FragmentCreateAccountWithGoogle());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
 }
 
 

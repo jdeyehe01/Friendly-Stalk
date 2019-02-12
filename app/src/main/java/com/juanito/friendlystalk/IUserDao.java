@@ -1,12 +1,13 @@
 package com.juanito.friendlystalk;
 
-import java.util.List;
+import java.util.ArrayList;
 
-interface IUserDao {
+public interface IUserDao {
+
     void insert(User user);
-    public List<User> getAll();
+    public ArrayList<User> getAll();
     User getUserByPseudo(String pseudo);
-    public List<User> getListFriendOneUser(String pseudoUser);
+    public ArrayList<User> getFriends();
     public User findByEmail(String email);
 
 }

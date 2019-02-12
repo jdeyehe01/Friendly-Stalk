@@ -2,13 +2,14 @@ package com.juanito.friendlystalk;
 
 import java.util.ArrayList;
 
-public class User {
+public class User{
     private String lastName;
     private String firstName;
     private String email;
     private String id;
     private String pseudo;
-    private ArrayList<String> friendsPseudo;
+    private ArrayList<User> friendsPseudo;
+    private String token;
 
 
     public User(){
@@ -20,7 +21,9 @@ public class User {
         this.email = email;
         this.id ="0" ;
         this.pseudo = pseudo;
+        this.token = "";
         this.friendsPseudo = new ArrayList<>();
+        friendsPseudo.add(new User("DEYEHE","Jean","j@h.com","Test"));
     }
 
     public String getLastName() {
@@ -63,16 +66,16 @@ public class User {
         this.pseudo = pseudo;
     }
 
-    public ArrayList<String> getFriends() {
+    public ArrayList<User> getFriends() {
         return friendsPseudo;
     }
 
-    public void setFriends(ArrayList<String> friends) {
+    public void setFriends(ArrayList<User> friends) {
         this.friendsPseudo = friends;
     }
 
-    public void addFriend(String pseudo){
-        friendsPseudo.add(pseudo);
+    public void addFriend(User user){
+        friendsPseudo.add(user);
     }
 
     @Override
