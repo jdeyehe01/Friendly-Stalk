@@ -44,17 +44,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         pseudo = (EditText)findViewById(R.id.editTextPseudo);
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-/*
-        if(currentUser != null ){
 
-           // Toast.makeText(CreateAccountActivity.this,currentUser.getEmail(), Toast.LENGTH_SHORT).show();
-            GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-            fName.setText(acct.getGivenName());
-            lName.setText(acct.getFamilyName());
-            email.setText();
-        }
-
-*/
 
         btnCreateUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +93,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(CreateAccountActivity.this, "Veuillez confirmer votre adresse mail en cliquant sur le lien qui a été envoyé à l'adresse suivante : " + email, Toast.LENGTH_LONG).show();
+                    Toast.makeText(CreateAccountActivity.this, "Veuillez confirmer votre adresse mail en cliquant sur le lien qui a été envoyé à l'adresse suivante : " + mAuth.getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
                 }else{
                     Toast.makeText(CreateAccountActivity.this,"Erreur dans l'envoie du mail pour effectuer une vérification",Toast.LENGTH_SHORT).show();
                 }
