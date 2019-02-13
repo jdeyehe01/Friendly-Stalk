@@ -11,14 +11,25 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class CreateAccountActivity extends AppCompatActivity {
+    public static final int REQUEST_CODE = 1;
     private EditText fName;
     private EditText lName;
     private EditText email;
@@ -26,7 +37,9 @@ public class CreateAccountActivity extends AppCompatActivity {
     private EditText pw;
     private Button btnCreateUser;
     private FirebaseAuth mAuth;
-    private UserRepository repository = new UserRepository();
+    private DatabaseReference db = FirebaseDatabase.getInstance().getReference("User");
+
+
 
 
 
@@ -42,15 +55,14 @@ public class CreateAccountActivity extends AppCompatActivity {
         email = (EditText) findViewById(R.id.editTextEmailUser);
         pw = (EditText) findViewById(R.id.editTextPwUser);
         pseudo = (EditText)findViewById(R.id.editTextPseudo);
-
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
 
         btnCreateUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signUp();
-            }
+               signUp();
+                            }
         });
 
     }
@@ -78,7 +90,11 @@ public class CreateAccountActivity extends AppCompatActivity {
                                 Toast.makeText(CreateAccountActivity.this, "Veuillez confirmer votre adresse mail en cliquant sur le lien qui a été envoyé à l'adresse suivante : " + email.getText().toString(), Toast.LENGTH_SHORT).show();
 
                                 User user = new User(lastName,firstName,emailTxt,pseudoTxt);
-                                repository.insert(user);
+                                String id = db.push().getKey();
+                                user.setId(id);
+
+                                db.child(id).setValue(user);
+
                                 startActivity(new Intent(CreateAccountActivity.this,LoginActivity.class));
                             }else {
                                 Toast.makeText(CreateAccountActivity.this,"Error votre mot de passe doit contenir au moins 6 caractères ",Toast.LENGTH_SHORT).show();
@@ -100,4 +116,5 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
         });
     }
+
 }
