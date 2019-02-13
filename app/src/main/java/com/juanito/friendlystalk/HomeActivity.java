@@ -19,7 +19,6 @@ public class HomeActivity extends AppCompatActivity {
     private Button btnListFriends;
     private Button btnInvitations;
     private Button btnUpdateInformation;
-    private UserRepository repo = new UserRepository();
 
     //private User u;
     @Override
