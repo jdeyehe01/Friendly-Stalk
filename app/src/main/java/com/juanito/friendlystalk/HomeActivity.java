@@ -53,21 +53,15 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             FirebaseAuth.getInstance().signOut();
-            //ancienne methode
-            //startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-            //nouvelle methode (ajouts de FLAG pour eviter de revenir en arriere alors qu'on est bien logout
-            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            Toast.makeText(HomeActivity.this, "Vous êtes deconnecté", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+            Toast.makeText(HomeActivity.this, "Vous êtes dectonnectés", Toast.LENGTH_SHORT).show();
         }
     };
 
     View.OnClickListener listFriends = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            startActivity(new Intent(HomeActivity.this,ListFriendsActivity.class));
+            startActivity(new Intent(HomeActivity.this,MyFriendsActivity.class));
         }
     };
 
