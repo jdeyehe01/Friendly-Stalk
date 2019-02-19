@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         pwET = (EditText) findViewById(R.id.editTextPw);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken("849989921588-n0hj7qee1ruq62tc8bjee754vkgj1e2t.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                   if(mAuth.getCurrentUser().isEmailVerified()){
+                    if(mAuth.getCurrentUser().isEmailVerified()){
                         startActivity(intent);
                     }else{
                         Toast.makeText(LoginActivity.this, "Veuiller confirmer votre adresse mail  svp \n Un mail à l'adresse " + mAuth.getCurrentUser().getEmail() + " vous a été envoyé ", Toast.LENGTH_SHORT).show();
@@ -176,10 +176,10 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent, REQUEST_CODE);
-            }
+            startActivityForResult(signInIntent, REQUEST_CODE);
+        }
 
-        };
+    };
 }
 
 
