@@ -35,7 +35,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ListFriendsActivity"></activity>
+        <activity android:name=".MyFriendsActivity"></activity>
 
     </application>
 

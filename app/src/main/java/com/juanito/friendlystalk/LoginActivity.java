@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnSignInWithEmail;
 
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+
 
     //Connection with email/password
     private EditText emailET;
@@ -50,9 +53,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
-
-        mAuth = FirebaseAuth.getInstance();
-
         btnCreateAccount = (Button) findViewById(R.id.btnCreateAccount);
         btnSignInWithEmail = (Button) findViewById(R.id.btnLoginEmail);
 
@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         pwET = (EditText) findViewById(R.id.editTextPw);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("849989921588-n0hj7qee1ruq62tc8bjee754vkgj1e2t.apps.googleusercontent.com")
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
@@ -75,6 +75,15 @@ public class LoginActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         findViewById(R.id.sign_in_button).setOnClickListener(signWithGoogleAcc);
+
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+
+        //si le user est connecté
+        if(currentUser != null){
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+        }
 
     }
 
