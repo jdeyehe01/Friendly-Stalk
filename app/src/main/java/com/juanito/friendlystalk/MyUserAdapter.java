@@ -1,5 +1,7 @@
 package com.juanito.friendlystalk;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,8 @@ import java.util.List;
 public class MyUserAdapter extends RecyclerView.Adapter<MyUserAdapter.MyViewHolder> {
 
     List<String> userList;
+    FriendInfoFragment fragment = new FriendInfoFragment();
+
 
 
     public MyUserAdapter(List<String> userList){
@@ -23,9 +27,6 @@ public class MyUserAdapter extends RecyclerView.Adapter<MyUserAdapter.MyViewHold
     public MyUserAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View itemView = layoutInflater.inflate(R.layout.user_item,parent,false);
-        int height = parent.getMeasuredHeight() / 4;
-        itemView.setMinimumHeight(height);
-
         return new MyViewHolder(itemView);
     }
 
@@ -54,8 +55,7 @@ public class MyUserAdapter extends RecyclerView.Adapter<MyUserAdapter.MyViewHold
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(itemView.getContext(), pseudo.getText(), Toast.LENGTH_SHORT).show();
-
+                    fragment.changeText(view.getRootView() , pseudo.getText().toString());
                 }
             });
         }
