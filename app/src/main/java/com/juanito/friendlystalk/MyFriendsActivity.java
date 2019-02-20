@@ -49,7 +49,10 @@ public class MyFriendsActivity extends AppCompatActivity {
 
                     for(DataSnapshot d : dataSnapshot.getChildren()){
                         User u = d.getValue(User.class);
-                        userList = u.getFriendsPseudo();
+                        if(u.getFriendsPseudo() != null){
+                            userList = u.getFriendsPseudo();
+                        }
+
 
                     }
 
