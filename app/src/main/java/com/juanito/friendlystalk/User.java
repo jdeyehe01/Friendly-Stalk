@@ -1,6 +1,7 @@
 package com.juanito.friendlystalk;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class User{
     private String lastName;
@@ -8,8 +9,7 @@ public class User{
     private String email;
     private String id;
     private String pseudo;
-    private ArrayList<String> friendsPseudo;
-    private String token;
+    private List<String> friendsPseudo;
 
 
     public User(){
@@ -19,12 +19,24 @@ public class User{
         this.lastName = lastName;
         this.firstName = firstName;
         this.email = email;
-        this.id ="0" ;
         this.pseudo = pseudo;
-        this.token = "";
         this.friendsPseudo = new ArrayList<>();
-        this.friendsPseudo.add("");
+        this.friendsPseudo.add("Boby");
+        this.friendsPseudo.add("Bob");
+        this.friendsPseudo.add("Jo'");
        // friendsPseudo.add(new User());
+    }
+
+    public User(String id,String lastName, String firstName, String email,String pseudo) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.email = email;
+        this.pseudo = pseudo;
+        this.friendsPseudo = new ArrayList<>();
+        this.friendsPseudo.add("Boby");
+        this.friendsPseudo.add("Bob");
+        this.friendsPseudo.add("Jo'");
+        this.id = id;
     }
 
     public String getLastName() {
@@ -67,16 +79,12 @@ public class User{
         this.pseudo = pseudo;
     }
 
-    public ArrayList<String> getFriends() {
+    public List<String> getFriendsPseudo() {
         return friendsPseudo;
     }
 
-    public void setFriends(ArrayList<String> friends) {
-        this.friendsPseudo = friends;
-    }
-
-    public void addFriend(String userPseudo){
-        friendsPseudo.add(userPseudo);
+    public void setFriendsPseudo(List<String> friendsPseudo) {
+        this.friendsPseudo = friendsPseudo;
     }
 
     @Override
@@ -87,7 +95,7 @@ public class User{
                 ", email='" + email + '\'' +
                 ", id='" + id + '\'' +
                 ", pseudo='" + pseudo + '\'' +
-                ", friends=" + friendsPseudo +
+                ", friendsPseudo=" + friendsPseudo +
                 '}';
     }
 }
