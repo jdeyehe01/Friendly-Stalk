@@ -1,10 +1,9 @@
 package com.juanito.friendlystalk;
 
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -37,6 +36,7 @@ public class MyFriendsActivity extends AppCompatActivity {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         displayFriends(currentUser.getEmail());
 
+
     }
 
     private void displayFriends(String idUser){
@@ -49,7 +49,11 @@ public class MyFriendsActivity extends AppCompatActivity {
 
                     for(DataSnapshot d : dataSnapshot.getChildren()){
                         User u = d.getValue(User.class);
-                        userList = u.getFriendsPseudo();
+
+                        if(u.getFriendsPseudo() != null){
+                            userList = u.getFriendsPseudo();
+                        }
+
 
                     }
 

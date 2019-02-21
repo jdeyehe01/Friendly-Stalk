@@ -24,6 +24,16 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".Widget.listWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/list_widget_provider_info" />
+        </receiver>
+
         <service android:name=".Services.MyFirebaseInstanceService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />

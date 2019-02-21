@@ -1,7 +1,6 @@
 package com.juanito.friendlystalk;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ public class MyUserAdapter extends RecyclerView.Adapter<MyUserAdapter.MyViewHold
 
     List<String> userList;
     FriendInfoFragment fragment = new FriendInfoFragment();
+
 
 
 
@@ -56,6 +56,7 @@ public class MyUserAdapter extends RecyclerView.Adapter<MyUserAdapter.MyViewHold
                 @Override
                 public void onClick(View view) {
                     fragment.changeText(view.getRootView() , pseudo.getText().toString());
+
                 }
             });
         }
