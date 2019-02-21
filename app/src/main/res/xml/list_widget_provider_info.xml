@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="160dp"
+    android:minHeight="160dp"
+    android:updatePeriodMillis="3600000"
+    android:widgetCategory="home_screen"
+    android:resizeMode="horizontal|vertical"
+    android:previewImage="@android:drawable/ic_dialog_map"
+    android:initialLayout="@layout/list_widget"
+    >
+</appwidget-provider>

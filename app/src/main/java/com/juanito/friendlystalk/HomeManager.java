@@ -20,8 +20,8 @@ public class HomeManager extends Application {
         currentUser = mAuth.getCurrentUser();
 
         //si le user est connecté
-        if(currentUser != null){
-            startActivity(new Intent(HomeManager.this, HomeActivity.class));
+        if(currentUser == null){
+            startActivity(new Intent(HomeManager.this, LoginActivity.class));
         }
     }
 }
