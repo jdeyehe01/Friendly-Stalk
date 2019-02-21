@@ -55,7 +55,7 @@ public class MyUserAdapter extends RecyclerView.Adapter<MyUserAdapter.MyViewHold
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    fragment.changeText(view.getRootView() , pseudo.getText().toString());
+                    fragment.changeText(view.getRootView(),pseudo.getText().toString());
 
                 }
             });
