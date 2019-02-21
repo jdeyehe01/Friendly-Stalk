@@ -9,6 +9,7 @@ public class User{
     private String email;
     private String id;
     private String pseudo;
+    private String lastLocation;
     private List<String> friendsPseudo;
 
 
@@ -20,6 +21,7 @@ public class User{
         this.firstName = firstName;
         this.email = email;
         this.pseudo = pseudo;
+        this.lastLocation = "";
         this.friendsPseudo = new ArrayList<>();
         this.friendsPseudo.add("Boby");
         this.friendsPseudo.add("Bob");
@@ -32,6 +34,7 @@ public class User{
         this.firstName = firstName;
         this.email = email;
         this.pseudo = pseudo;
+        this.lastLocation = "";
         this.friendsPseudo = new ArrayList<>();
         this.friendsPseudo.add("Boby");
         this.friendsPseudo.add("Bob");
@@ -87,6 +90,14 @@ public class User{
         this.friendsPseudo = friendsPseudo;
     }
 
+    public String getLastLocation() {
+        return lastLocation;
+    }
+
+    public void setLastLocation(String lastLocation) {
+        this.lastLocation = lastLocation;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -95,6 +106,7 @@ public class User{
                 ", email='" + email + '\'' +
                 ", id='" + id + '\'' +
                 ", pseudo='" + pseudo + '\'' +
+                ", lastLocation='" + lastLocation + '\'' +
                 ", friendsPseudo=" + friendsPseudo +
                 '}';
     }

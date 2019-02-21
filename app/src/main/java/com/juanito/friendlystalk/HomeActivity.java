@@ -1,25 +1,42 @@
 package com.juanito.friendlystalk;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.List;
+import java.util.Locale;
 
 public class HomeActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+    private TextView localText;
     private Button btnLogout;
     private Button btnListFriends;
     private Button btnInvitations;
     private Button btnUpdateInformation;
+    protected Location currentLocation;
 
+    private FusedLocationProviderClient fusedLocationProvider;
     //private User u;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +48,11 @@ public class HomeActivity extends AppCompatActivity {
         btnInvitations = findViewById(R.id.btnMyInvitations);
         btnListFriends = findViewById(R.id.btnMyFriends);
         btnUpdateInformation = findViewById(R.id.btnUpdateInformation);
+        localText = findViewById(R.id.localText);
 
         btnLogout.setOnClickListener(logoutListener);
         btnListFriends.setOnClickListener(listFriends);
-
+        updatePosition();
     }
 
     @Override
@@ -45,6 +63,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        updatePosition();
         Toast.makeText(HomeActivity.this, "Bienvenue " + currentUser.getDisplayName(), Toast.LENGTH_SHORT).show();
     }
 
@@ -71,6 +90,52 @@ public class HomeActivity extends AppCompatActivity {
         }
     };
 
+    private void updatePosition() {
+        fusedLocationProvider = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+            System.out.println("pasdelocalisation");
+            return;
+        } else {
+            fusedLocationProvider.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                String address = getCompleteAddressString(location.getLatitude(),location.getLongitude());
+                                currentLocation = location;
+                                localText.setText(address);
+                            }
+                        }
+                    });
+        }
+    }
+
+    private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+                strAdd = strReturnedAddress.toString();
+                Log.w("My Current location", strReturnedAddress.toString());
+            } else {
+                Log.w("My Current location", "No Address returned!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.w("My Current location", "Canont get Address!");
+        }
+        return strAdd;
+    }
 }
 
 
