@@ -67,6 +67,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        updatePosition();
     }
 
     @Override
@@ -121,6 +122,25 @@ public class HomeActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private Location getLocationFromAddress(String address) {
+        Location locationToReturn = new Location("");
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocationName(address, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                locationToReturn.setLatitude(returnedAddress.getLatitude());
+                locationToReturn.setLongitude(returnedAddress.getLongitude());
+
+                return locationToReturn;
+            }
+        } catch (Exception e) {
+            System.out.println("Couldn't create location from address : "+e);
+        }
+
+        return null;
     }
 
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
