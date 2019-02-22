@@ -119,7 +119,7 @@ public class FriendInfoFragment extends Fragment {
                        List<String> friendsPseudo =  u.getFriendsPseudo();
                        String userPseudo = pseudoFriend.split(" : ")[1];
                        friendsPseudo.remove(userPseudo);
-                        updateUser(u.getId(),friendsPseudo);
+                       updateUser(u.getId(),friendsPseudo);
                     }
                 }
             }

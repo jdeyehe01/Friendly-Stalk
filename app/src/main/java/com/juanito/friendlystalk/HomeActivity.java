@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,10 +21,17 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -37,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
     protected Location currentLocation;
 
     private FusedLocationProviderClient fusedLocationProvider;
+
     //private User u;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +95,7 @@ public class HomeActivity extends AppCompatActivity {
     View.OnClickListener listFriends = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            startActivity(new Intent(HomeActivity.this,MyFriendsActivity.class));
+            startActivity(new Intent(HomeActivity.this, MyFriendsActivity.class));
         }
     };
 
@@ -94,7 +103,7 @@ public class HomeActivity extends AppCompatActivity {
         fusedLocationProvider = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             System.out.println("pasdelocalisation");
             return;
         } else {
@@ -104,9 +113,10 @@ public class HomeActivity extends AppCompatActivity {
                         public void onSuccess(Location location) {
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
-                                String address = getCompleteAddressString(location.getLatitude(),location.getLongitude());
+                                String address = getCompleteAddressString(location.getLatitude(), location.getLongitude());
                                 currentLocation = location;
                                 localText.setText(address);
+                                insertLocalisationBdd(address);
                             }
                         }
                     });
@@ -135,6 +145,32 @@ public class HomeActivity extends AppCompatActivity {
             Log.w("My Current location", "Canont get Address!");
         }
         return strAdd;
+    }
+
+    private void insertLocalisationBdd(final String localisation) {
+        final DatabaseReference db = FirebaseDatabase.getInstance().getReference("User");
+
+        Query query = db.orderByChild("email").equalTo(currentUser.getEmail());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot d : dataSnapshot.getChildren()){
+                    User u = d.getValue(User.class);
+                    if(u!=null) {
+                      u.setLastLocation(localisation);
+                        Map<String, Object> userUpdates = new HashMap<>();
+                        userUpdates.put("Adresse", localisation);
+                        db.child(u.getId()).updateChildren(userUpdates);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
 
