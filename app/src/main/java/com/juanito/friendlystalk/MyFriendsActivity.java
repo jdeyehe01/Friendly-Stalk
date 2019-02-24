@@ -1,11 +1,16 @@
 package com.juanito.friendlystalk;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -16,6 +21,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +47,7 @@ public class MyFriendsActivity extends AppCompatActivity {
         displayFriends(currentUser.getEmail());
 
 
+
     }
 
     private void displayFriends(String idUser){
@@ -45,13 +56,13 @@ public class MyFriendsActivity extends AppCompatActivity {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                   // Iterable<DataSnapshot> friends = dataSnapshot.child("friends").getChildren();
 
                     for(DataSnapshot d : dataSnapshot.getChildren()){
                         User u = d.getValue(User.class);
 
                         if(u.getFriendsPseudo() != null){
                             userList = u.getFriendsPseudo();
+                            writeCache(userList);
                         }
 
 
@@ -68,5 +79,52 @@ public class MyFriendsActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public String readCache() {
+        File cacheDir = getCacheDir();
+        try {
+            FileInputStream fis = new FileInputStream(cacheDir.getPath() + "/" + "myCache.txt");
+            StringBuffer sb = readFromFIS(fis);
+            return sb.toString();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public void writeCache(List<String> friends) {
+       File cacheDir = getCacheDir();
+        try {
+            FileOutputStream fos = new FileOutputStream(cacheDir.getPath() + "/" + "myCache.txt");
+            Log.i("FOS",cacheDir.getAbsolutePath() + "/" + "myCache.txt");
+            writeToFos(fos,friends);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void writeToFos(FileOutputStream fos , List<String> frinds) throws IOException {
+        for(String pseudo : frinds){
+            fos.write((pseudo+ "\n").getBytes());
+        }
+        fos.flush();
+        fos.close();
+    }
+
+    private StringBuffer readFromFIS(FileInputStream fis) throws IOException {
+        StringBuffer sb = new StringBuffer();
+        int cr = 0;
+        while ((cr = fis.read()) != -1) {
+            sb.append((char) cr);
+        }
+        return sb;
     }
 }

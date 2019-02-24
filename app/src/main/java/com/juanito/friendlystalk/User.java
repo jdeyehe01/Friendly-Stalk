@@ -11,6 +11,7 @@ public class User{
     private String pseudo;
     private String lastLocation;
     private List<String> friendsPseudo;
+    private String dateAdresse;
 
 
     public User(){
@@ -23,10 +24,8 @@ public class User{
         this.pseudo = pseudo;
         this.lastLocation = "";
         this.friendsPseudo = new ArrayList<>();
-        this.friendsPseudo.add("Boby");
-        this.friendsPseudo.add("Bob");
-        this.friendsPseudo.add("Jo'");
-       // friendsPseudo.add(new User());
+        this.friendsPseudo.add("");
+        this.dateAdresse = "";
     }
 
     public User(String id,String lastName, String firstName, String email,String pseudo) {
@@ -36,9 +35,9 @@ public class User{
         this.pseudo = pseudo;
         this.lastLocation = "";
         this.friendsPseudo = new ArrayList<>();
-        this.friendsPseudo.add("Boby");
-        this.friendsPseudo.add("Bob");
-        this.friendsPseudo.add("Jo'");
+        this.friendsPseudo.add("");
+        this.dateAdresse = "";
+
         this.id = id;
     }
 
@@ -98,6 +97,14 @@ public class User{
         this.lastLocation = lastLocation;
     }
 
+    public String getDateAdresse() {
+        return dateAdresse;
+    }
+
+    public void setDateAdresse(String dateAdresse) {
+        this.dateAdresse = dateAdresse;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -108,6 +115,7 @@ public class User{
                 ", pseudo='" + pseudo + '\'' +
                 ", lastLocation='" + lastLocation + '\'' +
                 ", friendsPseudo=" + friendsPseudo +
+                ", dateAdresse='" + dateAdresse + '\'' +
                 '}';
     }
 }
