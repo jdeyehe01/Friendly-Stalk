@@ -82,6 +82,7 @@ public class HomeActivity extends AppCompatActivity {
 
         btnLogout.setOnClickListener(logoutListener);
         btnListFriends.setOnClickListener(listFriends);
+        btnUpdateInformation.setOnClickListener(updateInformationListener);
         initUserFromDb();
     }
 
@@ -122,6 +123,13 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             startActivity(new Intent(HomeActivity.this, MyFriendsActivity.class));
+        }
+    };
+
+    View.OnClickListener updateInformationListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            startActivity(new Intent(HomeActivity.this,MyInformationActivity.class));
         }
     };
 
