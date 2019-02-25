@@ -3,16 +3,20 @@ package com.juanito.friendlystalk;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +49,7 @@ public class HomeActivity extends AppCompatActivity {
     private Button btnListFriends;
     private Button btnInvitations;
     private Button btnUpdateInformation;
+    private Switch invisibleSwitch;
     protected Location currentLocation;
     private User userCurrent = new User();
     private Map<String,String> res = new HashMap<>();
@@ -64,23 +69,36 @@ public class HomeActivity extends AppCompatActivity {
         btnListFriends = findViewById(R.id.btnMyFriends);
         btnUpdateInformation = findViewById(R.id.btnUpdateInformation);
         localText = findViewById(R.id.localText);
+        invisibleSwitch = findViewById(R.id.ghostSwitch);
+        invisibleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    switchInvisible(true);
+                } else {
+                    switchInvisible(false);
+                }
+            }
+        });
 
         btnLogout.setOnClickListener(logoutListener);
         btnListFriends.setOnClickListener(listFriends);
         initUserFromDb();
-        updatePosition();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        updatePosition();
+        if (userCurrent.getInvisible() != null) {
+            updatePosition();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        updatePosition();
+        if (userCurrent.getInvisible() != null) {
+            updatePosition();
+        }
         Toast.makeText(HomeActivity.this, "Bienvenue " + currentUser.getDisplayName(), Toast.LENGTH_SHORT).show();
     }
 
@@ -116,19 +134,28 @@ public class HomeActivity extends AppCompatActivity {
             System.out.println("pasdelocalisation");
             return;
         } else {
-            fusedLocationProvider.getLastLocation()
-                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                String address = getCompleteAddressString(location.getLatitude(), location.getLongitude());
-                                currentLocation = location;
-                                localText.setText(address);
-                                insertLocalisationBdd(address);
+            if (!userCurrent.getInvisible()) {
+                System.out.println("Updating position");
+                fusedLocationProvider.getLastLocation()
+                        .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                // Got last known location. In some rare situations this can be null.
+                                if (location != null) {
+                                    String address = getCompleteAddressString(location.getLatitude(), location.getLongitude());
+                                    currentLocation = location;
+                                    localText.setText(address);
+                                    localText.setTextColor(ContextCompat.getColor(HomeActivity.this,R.color.colorAccent));
+                                    insertLocalisationBdd(address);
+                                }
                             }
-                        }
-                    });
+                        });
+            } else {
+                System.out.println("User invisible, not updating");
+                String emoji = new String(Character.toChars(0x1F47B));
+                localText.setText("(invisible) "+emoji);
+                localText.setTextColor(Color.parseColor("#FF0000"));
+            }
         }
     }
 
@@ -201,6 +228,34 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    private void switchInvisible(final boolean invisible) {
+        final Map<String, Object> userUpdates = new HashMap<>();
+        if (invisible) {
+            userUpdates.put("adresse","");
+        }
+
+        Query query = db.orderByChild("email").equalTo(currentUser.getEmail());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot d : dataSnapshot.getChildren()){
+                    User u = d.getValue(User.class);
+                    if(u!=null) {
+                        userUpdates.put("invisible", invisible);
+                        db.child(u.getId()).updateChildren(userUpdates);
+                        updatePosition();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void initUserFromDb(){
         Query query = db.orderByChild("email").equalTo(currentUser.getEmail());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -210,7 +265,9 @@ public class HomeActivity extends AppCompatActivity {
                     User u = d.getValue(User.class);
                     if(u!=null) {
                         userCurrent = u;
-                       res = addressfirends(u.getFriendsPseudo());
+                        updatePosition();
+                        if (userCurrent.getInvisible()) invisibleSwitch.setChecked(true);
+                       res = addressFriends(u.getFriendsPseudo());
                     }
                 }
 
@@ -224,7 +281,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    private Map<String, String> addressfirends(List<String> listFriends){
+    private Map<String, String> addressFriends(List<String> listFriends){
          //Toast.makeText(HomeActivity.this, Toast.LENGTH_SHORT).show();
 
         for(String pseudo : listFriends){
@@ -243,6 +300,19 @@ public class HomeActivity extends AppCompatActivity {
                        }
                    }
 
+                   for (Map.Entry<String,String> userToCompare : res.entrySet()) {
+                       if (!userCurrent.getAdresse().isEmpty() && !userCurrent.getInvisible()) {
+                           Location toCompare = getLocationFromAddress(userToCompare.getValue());
+                           Location userAdress = getLocationFromAddress(userCurrent.getAdresse());
+
+                           float distance = userAdress.distanceTo(toCompare);
+                           if (distance > 200) {
+                               System.out.println(userToCompare.getKey()+" est trop loin ("+distance+"m)");
+                           } else {
+                               System.out.println(userToCompare.getKey()+" est à moins de 200m !");
+                           }
+                       }
+                   }
 
                }
 
@@ -255,8 +325,6 @@ public class HomeActivity extends AppCompatActivity {
 
        return res;
        }
-
-
 
 }
 
