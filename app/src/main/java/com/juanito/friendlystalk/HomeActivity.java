@@ -46,6 +46,9 @@ public class HomeActivity extends AppCompatActivity {
     private Button btnInvitations;
     private Button btnUpdateInformation;
     protected Location currentLocation;
+    private User userCurrent = new User();
+    private Map<String,String> res = new HashMap<>();
+    private final DatabaseReference db = FirebaseDatabase.getInstance().getReference("User");
 
     private FusedLocationProviderClient fusedLocationProvider;
 
@@ -64,6 +67,7 @@ public class HomeActivity extends AppCompatActivity {
 
         btnLogout.setOnClickListener(logoutListener);
         btnListFriends.setOnClickListener(listFriends);
+        initUserFromDb();
         updatePosition();
     }
 
@@ -104,6 +108,7 @@ public class HomeActivity extends AppCompatActivity {
     };
 
     private void updatePosition() {
+
         fusedLocationProvider = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -171,8 +176,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void insertLocalisationBdd(final String localisation) {
-        final DatabaseReference db = FirebaseDatabase.getInstance().getReference("User");
-
         Query query = db.orderByChild("email").equalTo(currentUser.getEmail());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -197,6 +200,64 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void initUserFromDb(){
+        Query query = db.orderByChild("email").equalTo(currentUser.getEmail());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot d : dataSnapshot.getChildren()){
+                    User u = d.getValue(User.class);
+                    if(u!=null) {
+                        userCurrent = u;
+                       res = addressfirends(u.getFriendsPseudo());
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    private Map<String, String> addressfirends(List<String> listFriends){
+         //Toast.makeText(HomeActivity.this, Toast.LENGTH_SHORT).show();
+
+        for(String pseudo : listFriends){
+           Query query = db.orderByChild("pseudo").equalTo(pseudo);
+           query.addListenerForSingleValueEvent(new ValueEventListener() {
+               @Override
+               public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                   for(DataSnapshot d : dataSnapshot.getChildren()){
+                       User u = d.getValue(User.class);
+                       if(u!=null) {
+
+                           res.put(u.getPseudo(),u.getAdresse());
+                          // Toast.makeText(HomeActivity.this,res.toString(), Toast.LENGTH_SHORT).show();
+                          // Toast.makeText(HomeActivity.this,userCurrent.getInvisible().toString(), Toast.LENGTH_SHORT).show();
+
+                       }
+                   }
+
+
+               }
+
+               @Override
+               public void onCancelled(@NonNull DatabaseError databaseError) {
+
+               }
+           });
+       }
+
+       return res;
+       }
+
+
+
 }
 
 
