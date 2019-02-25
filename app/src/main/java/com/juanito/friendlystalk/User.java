@@ -12,6 +12,7 @@ public class User{
     private String lastLocation;
     private List<String> friendsPseudo;
     private String dateAdresse;
+    private Boolean invisible;
 
 
     public User(){

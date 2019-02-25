@@ -28,6 +28,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -178,8 +181,11 @@ public class HomeActivity extends AppCompatActivity {
                     User u = d.getValue(User.class);
                     if(u!=null) {
                       u.setLastLocation(localisation);
+                      Date currentDate = new Date();
+                        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                         Map<String, Object> userUpdates = new HashMap<>();
                         userUpdates.put("Adresse", localisation);
+                        userUpdates.put("DateAdresse", dateFormat.format(currentDate));
                         db.child(u.getId()).updateChildren(userUpdates);
                     }
                 }
