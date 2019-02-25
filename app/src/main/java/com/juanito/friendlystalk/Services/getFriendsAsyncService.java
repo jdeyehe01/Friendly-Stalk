@@ -17,6 +17,7 @@ import com.juanito.friendlystalk.User;
 
 import java.util.List;
 
+/* cette classe n'est plus utilisé -> ancienne methode pour recup la liste de friends dans le widget mais sans succès a cause du traitement asynchrone */
 public class getFriendsAsyncService extends AsyncTask<String, Void, String> {
 
     private String concat = "";

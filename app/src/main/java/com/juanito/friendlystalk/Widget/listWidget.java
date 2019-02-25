@@ -25,6 +25,8 @@ import com.juanito.friendlystalk.User;
 
 import java.util.List;
 
+import static com.juanito.friendlystalk.Utils.Global.FRIENDS_LIST;
+
 public class listWidget extends AppWidgetProvider {
 
     public String concat = "";
@@ -33,50 +35,26 @@ public class listWidget extends AppWidgetProvider {
 
     public static void updateWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId){ //String text
 
-
-
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.list_widget);
 
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             Log.i("LOG_TEST", "-----> getCurrentUser : OK");
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.list_widget);
-            new getFriendsAsyncService(remoteViews).execute(""); //on s'en fout du param, il est jamais utilisé
-
+            //new getFriendsAsyncService(remoteViews).execute(""); //param jamais utilisé
             // pour renseigner le text (la chaine qui contient la liste d'ami concatené), ne pas faire ça après le execute sinon on ecrase l'ancienne valeur du texte par celle qu'on rentre
-            /* /!\ Si on recup pas la liste d'ami d'ici la soutenance, on décommente la ligne du dessous et on affiche la chaine que l'on veut devant le prof ***/
-            //remoteViews.setTextViewText(R.id.textViewConcat, text);
-
-            Log.i("LOG_TEST", "-----> Pret pour UPDATE");
-            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-            Log.i("LOG_TEST", "-----> UPDATE : OK");
+            remoteViews.setTextViewText(R.id.textViewConcat, FRIENDS_LIST);
         } else {
             Log.i("LOG_TEST", "-----> getCurrentUser : KO");
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.list_widget);
             remoteViews.setTextViewText(R.id.textViewConcat, "Connectez vous !!");
-            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
         }
 
-
-
-
-        //remoteViews.setTextViewText(R.id.textView, text);
-        //remoteViews.setTextViewText(R.id.textView, text); // lister les amis et les setter dans une variable comme dans MyFriendsActivity ?
-
-
-
-        //appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
-
-
-
         for(int appWidgetId : appWidgetIds){
-            Log.i("LOG_TEST", "--------------------------------------------------- LANCEMENT UPDATEWIDGET --------------------------------------- "+concat);
-
-
-
+            //Log.i("LOG_TEST", "--------------------------------------------------- LANCEMENT UPDATEWIDGET --------------------------------------- "+concat);
             updateWidget(context, appWidgetManager, appWidgetId); //"UPDATED"
         }
     }

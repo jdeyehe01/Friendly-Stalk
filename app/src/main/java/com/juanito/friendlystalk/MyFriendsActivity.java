@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.juanito.friendlystalk.Utils.Global.FRIENDS_LIST;
+
 public class MyFriendsActivity extends AppCompatActivity {
     private DatabaseReference db = FirebaseDatabase.getInstance().getReference("User");
     private RecyclerView recyclerView;
@@ -63,6 +65,8 @@ public class MyFriendsActivity extends AppCompatActivity {
                         if(u.getFriendsPseudo() != null){
                             userList = u.getFriendsPseudo();
                             writeCache(userList);
+                            //FRIENDS_LIST = userList.toString();
+                            FRIENDS_LIST = readCache();
                         }
 
 
