@@ -9,11 +9,10 @@ public class User{
     private String email;
     private String id;
     private String pseudo;
-    private String lastLocation;
     private List<String> friendsPseudo;
     private String dateAdresse;
     private Boolean invisible;
-
+    private String adresse;
 
     public User(){
     }
@@ -23,10 +22,11 @@ public class User{
         this.firstName = firstName;
         this.email = email;
         this.pseudo = pseudo;
-        this.lastLocation = "";
         this.friendsPseudo = new ArrayList<>();
         this.friendsPseudo.add("");
         this.dateAdresse = "";
+        this.invisible = false;
+        this.adresse = "";
     }
 
     public User(String id,String lastName, String firstName, String email,String pseudo) {
@@ -34,12 +34,12 @@ public class User{
         this.firstName = firstName;
         this.email = email;
         this.pseudo = pseudo;
-        this.lastLocation = "";
         this.friendsPseudo = new ArrayList<>();
         this.friendsPseudo.add("");
         this.dateAdresse = "";
-
+        this.invisible = false;
         this.id = id;
+        this.adresse = "";
     }
 
     public String getLastName() {
@@ -90,14 +90,6 @@ public class User{
         this.friendsPseudo = friendsPseudo;
     }
 
-    public String getLastLocation() {
-        return lastLocation;
-    }
-
-    public void setLastLocation(String lastLocation) {
-        this.lastLocation = lastLocation;
-    }
-
     public String getDateAdresse() {
         return dateAdresse;
     }
@@ -106,6 +98,20 @@ public class User{
         this.dateAdresse = dateAdresse;
     }
 
+    public Boolean getInvisible() {
+        return invisible;
+    }
+
+    public void setInvisible(Boolean invisible) {
+        this.invisible = invisible;
+    }
+    public String getAdresse() {
+        return adresse;
+    }
+
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
     @Override
     public String toString() {
         return "User{" +
@@ -114,9 +120,10 @@ public class User{
                 ", email='" + email + '\'' +
                 ", id='" + id + '\'' +
                 ", pseudo='" + pseudo + '\'' +
-                ", lastLocation='" + lastLocation + '\'' +
                 ", friendsPseudo=" + friendsPseudo +
                 ", dateAdresse='" + dateAdresse + '\'' +
+                ", invisible=" + invisible +
+                ", adresse='" + adresse + '\'' +
                 '}';
     }
 }

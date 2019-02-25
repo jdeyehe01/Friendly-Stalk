@@ -180,12 +180,11 @@ public class HomeActivity extends AppCompatActivity {
                 for(DataSnapshot d : dataSnapshot.getChildren()){
                     User u = d.getValue(User.class);
                     if(u!=null) {
-                      u.setLastLocation(localisation);
                       Date currentDate = new Date();
                         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                         Map<String, Object> userUpdates = new HashMap<>();
-                        userUpdates.put("Adresse", localisation);
-                        userUpdates.put("DateAdresse", dateFormat.format(currentDate));
+                        userUpdates.put("adresse", localisation);
+                        userUpdates.put("dateAdresse", dateFormat.format(currentDate));
                         db.child(u.getId()).updateChildren(userUpdates);
                     }
                 }
