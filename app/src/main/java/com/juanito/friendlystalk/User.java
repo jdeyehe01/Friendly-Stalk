@@ -10,6 +10,7 @@ public class User{
     private String id;
     private String pseudo;
     private List<String> friendsPseudo;
+    private List<String> demands;
     private String dateAdresse;
     private Boolean invisible;
     private String adresse;
@@ -24,6 +25,8 @@ public class User{
         this.pseudo = pseudo;
         this.friendsPseudo = new ArrayList<>();
         this.friendsPseudo.add("");
+        this.demands = new ArrayList<>();
+        this.demands.add("test");
         this.dateAdresse = "";
         this.invisible = false;
         this.adresse = "";
@@ -36,6 +39,8 @@ public class User{
         this.pseudo = pseudo;
         this.friendsPseudo = new ArrayList<>();
         this.friendsPseudo.add("");
+        this.demands = new ArrayList<>();
+        this.demands.add("");
         this.dateAdresse = "";
         this.invisible = false;
         this.id = id;
@@ -86,8 +91,16 @@ public class User{
         return friendsPseudo;
     }
 
+    public List<String> getDemands() {
+        return demands;
+    }
+
     public void setFriendsPseudo(List<String> friendsPseudo) {
         this.friendsPseudo = friendsPseudo;
+    }
+
+    public void setDemands(List<String> demands) {
+        this.demands = demands;
     }
 
     public String getDateAdresse() {
@@ -121,6 +134,7 @@ public class User{
                 ", id='" + id + '\'' +
                 ", pseudo='" + pseudo + '\'' +
                 ", friendsPseudo=" + friendsPseudo +
+                ", demands=" + demands +
                 ", dateAdresse='" + dateAdresse + '\'' +
                 ", invisible=" + invisible +
                 ", adresse='" + adresse + '\'' +

@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_world_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MyInformationActivity"></activity>
+        <activity android:name=".MyInformationActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,6 +50,7 @@
         </service>
 
         <activity android:name=".MyFriendsActivity" />
+        <activity android:name=".MyDemandsActivity"></activity>
     </application>
 
 </manifest>
