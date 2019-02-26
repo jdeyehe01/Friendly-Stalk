@@ -13,16 +13,24 @@
         android:roundIcon="@mipmap/ic_world_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MyInformationActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".MyInformationActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".CreateAccountActivity">
+        <activity android:name=".HomeActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".CreateAccountActivity"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.INSERT" />
             </intent-filter>
@@ -49,8 +57,12 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".MyFriendsActivity" />
-        <activity android:name=".MyDemandsActivity"></activity>
+        <activity android:name=".MyFriendsActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".MyDemandsActivity"
+            android:screenOrientation="portrait"
+            ></activity>
     </application>
 
 </manifest>

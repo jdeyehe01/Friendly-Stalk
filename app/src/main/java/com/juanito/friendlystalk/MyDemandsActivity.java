@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +28,8 @@ public class MyDemandsActivity extends AppCompatActivity {
     private DatabaseReference db = FirebaseDatabase.getInstance().getReference("User");
     private RecyclerView recyclerView;
     private MyUserAdapter userAdapter;
+
+
     static List<String> userList;
 
     @Override
@@ -38,7 +43,9 @@ public class MyDemandsActivity extends AppCompatActivity {
         userList = new ArrayList<String>();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         displayDemands(currentUser.getEmail());
+
     }
+
 
     private void displayDemands(String idUser){
         Query query = db.orderByChild("email").equalTo(idUser);
@@ -49,13 +56,11 @@ public class MyDemandsActivity extends AppCompatActivity {
 
                 for(DataSnapshot d : dataSnapshot.getChildren()){
                     User u = d.getValue(User.class);
-                    Log.i("LOG_TEST","test 2");
                     if(u.getDemands() != null){
                         userList = u.getDemands();
                         Log.i("LOG_TEST",userList.toString());
                     }
                 }
-                Log.i("LOG_TEST","test 3");
                 userAdapter = new MyUserAdapter(userList);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 recyclerView.setAdapter(userAdapter);

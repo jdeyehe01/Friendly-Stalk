@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +36,8 @@ public class MyFriendsActivity extends AppCompatActivity {
     private DatabaseReference db = FirebaseDatabase.getInstance().getReference("User");
     private RecyclerView recyclerView;
     private MyUserAdapter userAdapter;
+    private Button btnAccept;
+    private Button btnRefuse;
     static List<String> userList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,6 @@ public class MyFriendsActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-
         userList = new ArrayList<String>();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         displayFriends(currentUser.getEmail());
